@@ -48,7 +48,15 @@ def forecasts(city):
         if response.status_code == 200:
 
             weather_details = response.json()
-            tmrwForecast = weather_details['list'][0]['weather'][0]['main']
+            
+            tmrwForecast = weather_details['list']
+
+            rainFlag = False
+            for threehourforecast in tmrwForecast:
+                if threehourforecast['weather'][0]['main'] == "Rain":
+                    rainFlag = True
+                    break
+                
 
             city = city.lower().split("+")
 
@@ -68,7 +76,7 @@ def forecasts(city):
 
                     if addressLocation == city:
 
-                        if tmrwForecast.lower() == "rain":
+                        if rainFlag:
 
                             if worker.role.lower() == "it":
                                 subject = "Tomorrow's Weather Forecast for " + worker.addresslocation
